@@ -44,7 +44,7 @@ class Regressor:
         self._is_trained = False
 
     def build_model(self) -> BaggingRegressor:
-        """Build a new Random Forest regressor."""
+        """Build a new Bagging regressor."""
         model = BaggingRegressor(
             n_estimators=self.n_estimators,
             max_samples=self.max_samples,
@@ -54,7 +54,7 @@ class Regressor:
         return model
 
     def fit(self, train_inputs: pd.DataFrame, train_targets: pd.Series) -> None:
-        """Fit the Random Forest regressor to the training data.
+        """Fit the Bagging regressor to the training data.
 
         Args:
             train_inputs (pandas.DataFrame): The features of the training data.
@@ -74,22 +74,21 @@ class Regressor:
         return self.model.predict(inputs)
 
     def evaluate(self, test_inputs: pd.DataFrame, test_targets: pd.Series) -> float:
-        """Evaluate the Random Forest regressor and return coefficient of
+        """Evaluate the Bagging regressor and return coefficient of
         determination (r-squared) of the prediction.
 
         Args:
             test_inputs (pandas.DataFrame): The features of the test data.
             test_targets (pandas.Series): The target of the test data.
         Returns:
-            float: The coefficient of determination of the prediction of the Random
-                   Forest regressor.
+            float: The coefficient of determination of the prediction of the Bagging regressor.
         """
         if self.model is not None:
             return self.model.score(test_inputs, test_targets)
         raise NotFittedError("Model is not fitted yet.")
 
     def save(self, model_dir_path: str) -> None:
-        """Save the Random Forest regressor to disk.
+        """Save the Bagging regressor to disk.
 
         Args:
             model_dir_path (str): Dir path to which to save the model.
@@ -100,12 +99,12 @@ class Regressor:
 
     @classmethod
     def load(cls, model_dir_path: str) -> "Regressor":
-        """Load the Random Forest regressor from disk.
+        """Load the Bagging regressor from disk.
 
         Args:
             model_dir_path (str): Dir path to the saved model.
         Returns:
-            regressor: A new instance of the loaded Random Forest regressor.
+            regressor: A new instance of the loaded Bagging regressor.
         """
         model = joblib.load(os.path.join(model_dir_path, PREDICTOR_FILE_NAME))
         return model
@@ -114,9 +113,9 @@ class Regressor:
         # sort params alphabetically for unit test to run successfully
         return (
             f"Model name: {self.model_name} ("
-            f"n_estimators: {self.n_estimators}, "
+            f"bootstrap: {self.bootstrap}, "
             f"max_samples: {self.max_samples}, "
-            f"bootstrap: {self.bootstrap})"
+            f"n_estimators: {self.n_estimators})"
         )
 
 
